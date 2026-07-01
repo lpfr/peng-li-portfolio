@@ -1,6 +1,6 @@
 export default function OpeningStory() {
   return (
-    <section className="openingStory" aria-labelledby="opening-title">
+    <section className="openingStory" id="opening" aria-labelledby="opening-title">
       <p className="sectionKicker">[01] Ouverture / le papier</p>
       <div className="openingStoryBody">
         <div className="openingStoryText">

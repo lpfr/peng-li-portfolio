@@ -51,6 +51,7 @@ export default function Hero() {
   const [isCameraStarting, setIsCameraStarting] = useState(false);
   const [isCameraActive, setIsCameraActive] = useState(false);
   const [hasEnteredExperience, setHasEnteredExperience] = useState(false);
+  const [isScrollCueVisible, setIsScrollCueVisible] = useState(true);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -85,6 +86,14 @@ export default function Hero() {
       cameraStreamRef.current?.getTracks().forEach((track) => track.stop());
       mobileFrameCacheRef.current = [];
     };
+  }, []);
+
+  useEffect(() => {
+    const updateScrollCue = () => setIsScrollCueVisible(window.scrollY < 80);
+
+    updateScrollCue();
+    window.addEventListener("scroll", updateScrollCue, { passive: true });
+    return () => window.removeEventListener("scroll", updateScrollCue);
   }, []);
 
   function syncVideoMetadata() {
@@ -477,6 +486,15 @@ export default function Hero() {
           {!isMetadataLoaded && <p className="cameraStatus">Chargement de la vidéo...</p>}
         </div>
       )}
+
+      <a
+        className={`heroScrollCue${isScrollCueVisible ? "" : " isHidden"}`}
+        href="#opening"
+        aria-label="Découvrir la suite"
+      >
+        <span>Découvrir la suite</span>
+        <span aria-hidden="true">↓</span>
+      </a>
     </section>
   );
 }

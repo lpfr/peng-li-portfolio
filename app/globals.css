@@ -283,6 +283,41 @@ main {
   line-height: 1.25;
 }
 
+.heroScrollCue {
+  position: absolute;
+  right: clamp(22px, 4vw, 56px);
+  bottom: calc(18px + env(safe-area-inset-bottom, 0px));
+  z-index: 9;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  color: rgba(245, 241, 232, 0.62);
+  font-size: 0.68rem;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: opacity 500ms ease;
+}
+
+.heroScrollCue.isHidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.heroScrollCue span:last-child {
+  font-size: 0.9rem;
+  animation: scrollCueBreath 2.8s ease-in-out infinite;
+}
+
+@keyframes scrollCueBreath {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(4px);
+  }
+}
+
 @keyframes heroMessageIn {
   from {
     opacity: 0;
@@ -1309,6 +1344,13 @@ main {
 }
 
 @media (max-width: 640px) {
+  .heroScrollCue {
+    right: 50%;
+    bottom: calc(86px + env(safe-area-inset-bottom, 0px));
+    transform: translateX(50%);
+    white-space: nowrap;
+  }
+
   .heroIntroOverlay {
     top: 78px;
     bottom: auto;

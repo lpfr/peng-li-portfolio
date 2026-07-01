@@ -407,8 +407,8 @@ export default function Hero() {
           <span>Ouverture / le papier</span>
         </div>
         <h1>
-          <span>Jeté.</span>
-          <span>Comme une feuille froissée.</span>
+          <span>Sous les plis,</span>
+          <span>il y a encore quelqu’un.</span>
         </h1>
         <p className="heroIntroInstruction">
           Ouvre ta main.

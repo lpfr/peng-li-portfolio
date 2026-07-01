@@ -15,6 +15,7 @@ const DEFAULT_FIST_RAW = 0.2;
 const DEFAULT_OPEN_RAW = 0.82;
 const MIN_CALIBRATION_DISTANCE = 0.04;
 const VIDEO_SEEK_EPSILON = 0.006;
+const FIRST_DECODED_FRAME_TIME = 0.04;
 
 type CameraStatus = "Caméra éteinte" | "Recherche de la main" | "Main détectée";
 
@@ -271,6 +272,7 @@ export default function Hero() {
 
     try {
       setIsCameraStarting(true);
+      await primeHeroVideoDecoder();
       cameraStreamRef.current?.getTracks().forEach((track) => track.stop());
       const stream = await navigator.mediaDevices.getUserMedia({
         video: { width: { ideal: 640 }, height: { ideal: 480 }, facingMode: "user" },
@@ -306,6 +308,34 @@ export default function Hero() {
       setCameraStatus("Caméra éteinte");
     } finally {
       setIsCameraStarting(false);
+    }
+  }
+
+  async function primeHeroVideoDecoder() {
+    const video = videoRef.current;
+
+    if (!video) return;
+
+    try {
+      video.muted = true;
+      await video.play();
+
+      await new Promise<void>((resolve) => {
+        if ("requestVideoFrameCallback" in video) {
+          video.requestVideoFrameCallback(() => resolve());
+          return;
+        }
+
+        window.setTimeout(resolve, 80);
+      });
+    } catch (error) {
+      console.warn("Hero video decoder could not be primed.", error);
+    } finally {
+      video.pause();
+      const duration = durationRef.current || video.duration;
+      if (Number.isFinite(duration) && duration > 0) {
+        video.currentTime = progressToTime(currentProgressRef.current, duration);
+      }
     }
   }
 
@@ -458,7 +488,9 @@ export default function Hero() {
 
 function progressToTime(progress: number, duration: number) {
   const clamped = clamp(progress);
-  return clamped >= 0.995 ? Math.max(duration - 0.03, 0) : clamped * duration;
+  if (clamped >= 0.995) return Math.max(duration - 0.03, 0);
+  if (clamped <= 0.005) return Math.min(FIRST_DECODED_FRAME_TIME, duration);
+  return clamped * duration;
 }
 
 function calculatePalmOpenness(landmarks: NormalizedLandmark[]) {

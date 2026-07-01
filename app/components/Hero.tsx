@@ -16,12 +16,18 @@ const DEFAULT_OPEN_RAW = 0.82;
 const MIN_CALIBRATION_DISTANCE = 0.04;
 const VIDEO_SEEK_EPSILON = 0.006;
 const FIRST_DECODED_FRAME_TIME = 0.04;
+const MOBILE_FRAME_COUNT = 76;
+const VIDEO_DURATION_FALLBACK = 5.07;
 
 type CameraStatus = "Caméra éteinte" | "Recherche de la main" | "Main détectée";
 
 export default function Hero() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const mobileFrameRef = useRef<HTMLImageElement>(null);
+  const mobileFrameCacheRef = useRef<HTMLImageElement[]>([]);
+  const lastMobileFrameRef = useRef(1);
+  const mobileFrameModeRef = useRef(false);
   const cameraVideoRef = useRef<HTMLVideoElement>(null);
   const cameraStreamRef = useRef<MediaStream | null>(null);
   const handLandmarkerRef = useRef<HandLandmarker | null>(null);
@@ -58,6 +64,18 @@ export default function Hero() {
     video?.addEventListener("durationchange", syncVideoMetadata);
     video?.addEventListener("canplay", syncVideoMetadata);
 
+    if (window.matchMedia("(max-width: 980px)").matches) {
+      mobileFrameModeRef.current = true;
+      durationRef.current = VIDEO_DURATION_FALLBACK;
+      setIsMetadataLoaded(true);
+      startVideoProgressLoop();
+      mobileFrameCacheRef.current = Array.from({ length: MOBILE_FRAME_COUNT }, (_, index) => {
+        const image = new Image();
+        image.src = mobileFramePath(index + 1);
+        return image;
+      });
+    }
+
     return () => {
       video?.removeEventListener("loadedmetadata", syncVideoMetadata);
       video?.removeEventListener("durationchange", syncVideoMetadata);
@@ -69,6 +87,7 @@ export default function Hero() {
         cancelAnimationFrame(videoAnimationFrameRef.current);
       }
       cameraStreamRef.current?.getTracks().forEach((track) => track.stop());
+      mobileFrameCacheRef.current = [];
     };
   }, []);
 
@@ -147,7 +166,7 @@ export default function Hero() {
     const video = videoRef.current;
     const videoDuration = durationRef.current;
 
-    if (video && videoDuration) {
+    if (video && videoDuration && !mobileFrameModeRef.current) {
       if (
         Math.abs(clampedProgress - lastWrittenProgressRef.current) > VIDEO_SEEK_EPSILON ||
         clampedProgress < 0.01 ||
@@ -159,8 +178,21 @@ export default function Hero() {
       if (!video.paused) video.pause();
     }
 
+    updateMobileFrame(clampedProgress);
+
     setProgress(Math.round(clampedProgress * 100));
     setMappedOpenness(clampedProgress);
+  }
+
+  function updateMobileFrame(clampedProgress: number) {
+    const image = mobileFrameRef.current;
+    if (!image) return;
+
+    const frame = Math.round(clamp(clampedProgress) * (MOBILE_FRAME_COUNT - 1)) + 1;
+    if (frame === lastMobileFrameRef.current) return;
+
+    lastMobileFrameRef.current = frame;
+    image.src = mobileFramePath(frame);
   }
 
   function seekAndDrawProgress(clampedProgress: number, videoDuration: number) {
@@ -272,7 +304,6 @@ export default function Hero() {
 
     try {
       setIsCameraStarting(true);
-      await primeHeroVideoDecoder();
       cameraStreamRef.current?.getTracks().forEach((track) => track.stop());
       const stream = await navigator.mediaDevices.getUserMedia({
         video: { width: { ideal: 640 }, height: { ideal: 480 }, facingMode: "user" },
@@ -311,34 +342,6 @@ export default function Hero() {
     }
   }
 
-  async function primeHeroVideoDecoder() {
-    const video = videoRef.current;
-
-    if (!video) return;
-
-    try {
-      video.muted = true;
-      await video.play();
-
-      await new Promise<void>((resolve) => {
-        if ("requestVideoFrameCallback" in video) {
-          video.requestVideoFrameCallback(() => resolve());
-          return;
-        }
-
-        window.setTimeout(resolve, 80);
-      });
-    } catch (error) {
-      console.warn("Hero video decoder could not be primed.", error);
-    } finally {
-      video.pause();
-      const duration = durationRef.current || video.duration;
-      if (Number.isFinite(duration) && duration > 0) {
-        video.currentTime = progressToTime(currentProgressRef.current, duration);
-      }
-    }
-  }
-
   function handleDisableCamera() {
     if (animationFrameRef.current !== null) {
       cancelAnimationFrame(animationFrameRef.current);
@@ -369,6 +372,13 @@ export default function Hero() {
       </nav>
 
       <div className="heroVideoStage" aria-hidden="true">
+        <img
+          ref={mobileFrameRef}
+          className="heroMobileFrame"
+          src={mobileFramePath(1)}
+          alt=""
+          draggable={false}
+        />
         <canvas ref={canvasRef} className="heroCanvas" aria-hidden="true" />
         <video
           ref={videoRef}
@@ -491,6 +501,10 @@ function progressToTime(progress: number, duration: number) {
   if (clamped >= 0.995) return Math.max(duration - 0.03, 0);
   if (clamped <= 0.005) return Math.min(FIRST_DECODED_FRAME_TIME, duration);
   return clamped * duration;
+}
+
+function mobileFramePath(frame: number) {
+  return `/assets/hero/frames/frame-${String(frame).padStart(3, "0")}.webp`;
 }
 
 function calculatePalmOpenness(landmarks: NormalizedLandmark[]) {

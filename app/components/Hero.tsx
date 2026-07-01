@@ -344,6 +344,7 @@ export default function Hero() {
           ref={videoRef}
           className="heroVideo"
           src={HERO_VIDEO_SRC}
+          poster="/assets/hero/paper-unfold-poster.jpg"
           muted
           playsInline
           preload="auto"
@@ -353,6 +354,7 @@ export default function Hero() {
             syncVideoMetadata();
             drawVideoFrame();
           }}
+          onLoadedData={drawVideoFrame}
           onError={(event) => {
             console.error("Hero video failed to load.", event);
           }}

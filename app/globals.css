@@ -94,7 +94,10 @@ main {
   filter: none;
 }
 
-.heroCanvas {
+.heroCanvas,
+.heroVideo {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   max-height: none;
@@ -103,7 +106,14 @@ main {
   filter: none;
 }
 
-.heroVideo,
+.heroCanvas {
+  z-index: 2;
+}
+
+.heroVideo {
+  z-index: 1;
+}
+
 .cameraFeed {
   position: absolute;
   width: 1px;
@@ -977,6 +987,10 @@ main {
 
 @media (max-width: 980px) {
   .heroCanvas {
+    display: none;
+  }
+
+  .heroVideo {
     object-fit: contain;
   }
 
@@ -1032,7 +1046,7 @@ main {
 }
 
 @media (max-width: 640px) {
-  .heroCanvas {
+  .heroVideo {
     object-fit: cover;
     object-position: 50% 42%;
     transform: scale(1.18);

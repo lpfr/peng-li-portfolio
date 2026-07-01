@@ -4,6 +4,8 @@ const works = [
     type: "Expérience de réflexion personnelle / Test interactif",
     year: "2026",
     role: "Concept, direction visuelle, interface, prompts IA",
+    tools: "Image IA · Interface web · Prompt design · Prototypage",
+    skills: "Narration personnelle · Expérience utilisateur · Direction visuelle",
     href: "https://inner-journey-tests.vercel.app/",
     image: "/assets/work/voyages-interieurs-home.png",
     description:
@@ -14,6 +16,8 @@ const works = [
     type: "Geste / Vidéo IA / Prototype web",
     year: "2026",
     role: "Interaction, direction visuelle, prototype",
+    tools: "MediaPipe · React · Vidéo IA · Animation web",
+    skills: "Interaction gestuelle · Narration visuelle · Prototypage",
     href: "#top",
     image: "/assets/hero/paper-ball.png",
     description:
@@ -24,6 +28,8 @@ const works = [
     type: "Processus IA / Prototypage / Automatisation créative",
     year: "2026",
     role: "Prompt design, image, vidéo, interface",
+    tools: "n8n · IA générative · Automatisation · Prototypage",
+    skills: "Conception de workflow · Pensée système · Expérimentation",
     href: "#process",
     image: "/assets/work/workflow-n8n-video-agent.png",
     description:
@@ -59,15 +65,32 @@ export default function SelectedWork() {
             target={work.href.startsWith("http") ? "_blank" : undefined}
             rel={work.href.startsWith("http") ? "noreferrer" : undefined}
           >
-            <span>{String(index + 1).padStart(2, "0")}</span>
-            <strong>{work.title}</strong>
-            <em>
-              {work.type}
-              <br />
-              {work.description}
-            </em>
-            <small>{work.year}</small>
-            <small>{work.role}</small>
+            <span className="workNumber">{String(index + 1).padStart(2, "0")}</span>
+            <div className="workIdentity">
+              <strong>{work.title}</strong>
+              <p>{work.type}</p>
+            </div>
+            <div className="workDetails">
+              <p className="workConcept">{work.description}</p>
+              <dl>
+                <div>
+                  <dt>Ce que j’ai fait</dt>
+                  <dd>{work.role}</dd>
+                </div>
+                <div>
+                  <dt>Outils / Techniques</dt>
+                  <dd>{work.tools}</dd>
+                </div>
+                <div>
+                  <dt>Compétences montrées</dt>
+                  <dd>{work.skills}</dd>
+                </div>
+              </dl>
+            </div>
+            <div className="workAction">
+              <small>{work.year}</small>
+              <span>Découvrir</span>
+            </div>
           </a>
         ))}
       </div>

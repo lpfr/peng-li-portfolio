@@ -51,7 +51,7 @@ export default function PortfolioEffects() {
 
       gsap.utils.toArray<HTMLElement>("section:not(.hero), footer").forEach((section) => {
         const children = section.querySelectorAll(
-          ".sectionKicker, h2, .openingStoryText > *, .sectionLead, .studioFlow > *, .studioMeta, .darkLead, .skillCloud, .coordinatesMini, .workIndex, .glimpseGrid, .processGrid, .siteFooter > *"
+          ".sectionKicker, h2, .openingStoryText > *, .openingCapability, .sectionLead, .studioFlow > *, .studioMeta, .darkLead, .skillCloud, .coordinatesMini, .workIndex, .glimpseGrid, .processGrid, .siteFooter > *"
         );
 
         gsap.fromTo(

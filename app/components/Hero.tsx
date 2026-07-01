@@ -36,7 +36,6 @@ export default function Hero() {
   const videoAnimationFrameRef = useRef<number | null>(null);
   const durationRef = useRef(0);
   const smoothingStrengthRef = useRef(DEFAULT_SMOOTHING_STRENGTH);
-  const rawOpennessRef = useRef(0);
   const lastWrittenProgressRef = useRef(-1);
   const targetProgressRef = useRef(0);
   const currentProgressRef = useRef(0);
@@ -51,13 +50,7 @@ export default function Hero() {
   const [cameraStatus, setCameraStatus] = useState<CameraStatus>("Caméra éteinte");
   const [isCameraStarting, setIsCameraStarting] = useState(false);
   const [isCameraActive, setIsCameraActive] = useState(false);
-  const [rawOpenness, setRawOpenness] = useState(0);
-  const [mappedOpenness, setMappedOpenness] = useState(0);
-  const [calibration, setCalibration] = useState({
-    fist: DEFAULT_FIST_RAW,
-    open: DEFAULT_OPEN_RAW
-  });
-  const [smoothingStrength, setSmoothingStrength] = useState(DEFAULT_SMOOTHING_STRENGTH);
+  const [hasEnteredExperience, setHasEnteredExperience] = useState(false);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -113,26 +106,6 @@ export default function Hero() {
     seekVideoToProgress(Number(event.target.value) / 100);
   }
 
-  function handleSmoothingChange(event: ChangeEvent<HTMLInputElement>) {
-    const nextStrength = Number(event.target.value);
-    smoothingStrengthRef.current = nextStrength;
-    setSmoothingStrength(nextStrength);
-  }
-
-  function handleSetFistCalibration() {
-    const raw = rawOpennessRef.current;
-    fistRawRef.current = raw;
-    setCalibration({ fist: raw, open: openRawRef.current });
-    seekVideoToProgress(0);
-  }
-
-  function handleSetOpenCalibration() {
-    const raw = rawOpennessRef.current;
-    openRawRef.current = raw;
-    setCalibration({ fist: fistRawRef.current, open: raw });
-    seekVideoToProgress(1);
-  }
-
   function seekVideoToProgress(nextProgress: number) {
     const clampedProgress = clamp(nextProgress);
     targetProgressRef.current = clampedProgress;
@@ -143,8 +116,6 @@ export default function Hero() {
   function setTargetVideoProgress(nextProgress: number) {
     const clampedProgress = clamp(nextProgress);
     targetProgressRef.current = clampedProgress;
-    setProgress(Math.round(clampedProgress * 100));
-    setMappedOpenness(clampedProgress);
   }
 
   function startVideoProgressLoop() {
@@ -185,7 +156,6 @@ export default function Hero() {
     updateMobileFrame(clampedProgress);
 
     setProgress(Math.round(clampedProgress * 100));
-    setMappedOpenness(clampedProgress);
   }
 
   function updateMobileFrame(clampedProgress: number) {
@@ -280,7 +250,6 @@ export default function Hero() {
     }
 
     const raw = calculatePalmOpenness(landmarks);
-    rawOpennessRef.current = raw;
 
     if (mobileFrameModeRef.current) {
       observedMinRawRef.current = Math.min(observedMinRawRef.current, raw);
@@ -306,7 +275,6 @@ export default function Hero() {
     const mappedProgress = mapPalmOpennessToProgress(smoothed, fistRaw, openRaw);
 
     setCameraStatus("Main détectée");
-    setRawOpenness(raw);
     setTargetVideoProgress(mappedProgress);
 
     animationFrameRef.current = requestAnimationFrame(detectHands);
@@ -342,8 +310,6 @@ export default function Hero() {
       targetProgressRef.current = 0;
       currentProgressRef.current = 0;
       lastWrittenProgressRef.current = -1;
-      setRawOpenness(0);
-      setMappedOpenness(0);
       seekVideoToProgress(0);
       setCameraStatus("Recherche de la main");
 
@@ -353,6 +319,7 @@ export default function Hero() {
 
       animationFrameRef.current = requestAnimationFrame(detectHands);
       setIsCameraActive(true);
+      setHasEnteredExperience(true);
     } catch (error) {
       console.error("Camera permission failed.", error);
       setCameraStatus("Caméra éteinte");
@@ -372,11 +339,20 @@ export default function Hero() {
     if (cameraVideo) cameraVideo.srcObject = null;
     setIsCameraActive(false);
     setCameraStatus("Caméra éteinte");
-    setRawOpenness(0);
-    setMappedOpenness(0);
     targetProgressRef.current = 0;
     currentProgressRef.current = 0;
   }
+
+  function handleViewWithoutCamera() {
+    handleDisableCamera();
+    seekVideoToProgress(0);
+    setHasEnteredExperience(true);
+    requestAnimationFrame(() => {
+      targetProgressRef.current = 1;
+    });
+  }
+
+  const revealComplete = progress >= 96;
 
   return (
     <section className="hero" id="top" aria-label="Identité vidéo interactive">
@@ -422,98 +398,81 @@ export default function Hero() {
 
       <video ref={cameraVideoRef} className="cameraFeed" muted playsInline aria-hidden="true" />
 
-      <div className="heroCopy">
-        <strong className="heroNameHidden">Peng Li</strong>
-        <span>Portfolio interactif</span>
-        <small>
-          <span>Ouvre la main.</span>
-          <span>Le papier se déplie.</span>
-        </small>
-      </div>
-
-      <div
-        className={`heroControls${isCameraActive ? " isCameraActive" : ""}`}
-        aria-label="Contrôles d’interaction vidéo"
-      >
-        {isCameraActive ? (
-          <button className="handButton" type="button" onClick={handleDisableCamera}>
-            Arrêter le mode main
-          </button>
-        ) : (
+      <div className={`heroIntroOverlay${hasEnteredExperience ? " isHidden" : ""}`}>
+        <h1>Je me suis senti jeté comme une feuille froissée.</h1>
+        <p className="heroIntroInstruction">
+          Ouvre ta main devant la caméra
+          <br />
+          pour déplier le papier
+          <br />
+          et découvrir la personne à l’intérieur.
+        </p>
+        <div className="heroIntroActions">
           <button
-            className="handButton"
+            className="heroIntroPrimary"
             type="button"
             disabled={isCameraStarting}
             onClick={handleEnableHandInteraction}
           >
-            {isCameraStarting ? "Démarrage de la caméra..." : "Activer la caméra"}
+            {isCameraStarting ? "Démarrage..." : "Activer la caméra"}
           </button>
-        )}
-
-        {!isCameraActive && (
-          <div className="gestureGuide" aria-label="Mode d’emploi">
-            <span>1. Active la caméra</span>
-            <span>2. Place ta main devant l’écran</span>
-            <span>3. Ouvre la main pour déplier</span>
-          </div>
-        )}
-
-        {isCameraActive && (
-          <div className="gestureGuide isActive" aria-label="Mode d’emploi caméra active">
-            <span>Poing fermé = papier froissé</span>
-            <span>Main ouverte = papier déplié</span>
-          </div>
-        )}
-
-        <div className="subtleSlider">
-          <input
-            className="scrubber"
-            type="range"
-            min="0"
-            max="100"
-            step="1"
-            value={progress}
-            disabled={!isMetadataLoaded && !durationRef.current}
-            onChange={handleSliderChange}
-            aria-label="Faire défiler la vidéo du papier"
-          />
+          <button
+            className="heroIntroSecondary"
+            type="button"
+            disabled={isCameraStarting}
+            onClick={handleViewWithoutCamera}
+          >
+            Voir sans caméra
+          </button>
         </div>
-
-        {isCameraActive && (
-          <>
-            <div className="calibrationControls">
-              <button className="calibrateButton" type="button" onClick={handleSetFistCalibration}>
-                Poing fermé = 0
-              </button>
-              <button className="calibrateButton" type="button" onClick={handleSetOpenCalibration}>
-                Main ouverte = 1
-              </button>
-            </div>
-
-            <div className="smoothingControl">
-              <input
-                className="scrubber"
-                type="range"
-                min="0.04"
-                max="0.5"
-                step="0.01"
-                value={smoothingStrength}
-                onChange={handleSmoothingChange}
-                aria-label="Régler la fluidité"
-              />
-            </div>
-          </>
-        )}
-
-        <p className="cameraStatus">{cameraStatus}</p>
-        {isCameraActive && (
-          <p className="debugReadout">
-            brut {rawOpenness.toFixed(3)} / mappé {mappedOpenness.toFixed(3)} / poing{" "}
-            {calibration.fist.toFixed(3)} / ouvert {calibration.open.toFixed(3)}
-          </p>
-        )}
-        {!isMetadataLoaded && <p className="cameraStatus">Chargement de la vidéo...</p>}
+        <p className="heroPrivacy">
+          La caméra sert uniquement à détecter ta main.
+          <br />
+          Aucune image n’est enregistrée.
+        </p>
       </div>
+
+      {hasEnteredExperience && isCameraActive && !revealComplete && (
+        <p className="heroGesturePrompt">Ouvre ta main pour déplier le papier.</p>
+      )}
+
+      {hasEnteredExperience && revealComplete && (
+        <p className="heroRevealMessage">
+          Je n’étais pas un déchet.
+          <br />
+          J’étais seulement froissé.
+        </p>
+      )}
+
+      {hasEnteredExperience && (
+        <div
+          className={`heroControls${isCameraActive ? " isCameraActive" : ""}`}
+          aria-label="Contrôles d’interaction vidéo"
+        >
+          {isCameraActive && (
+            <button className="stopCameraButton" type="button" onClick={handleDisableCamera}>
+              Arrêter la caméra
+            </button>
+          )}
+
+          <div className="subtleSlider">
+            <input
+              className="scrubber"
+              type="range"
+              min="0"
+              max="100"
+              step="1"
+              value={progress}
+              disabled={!isMetadataLoaded && !durationRef.current}
+              onChange={handleSliderChange}
+              aria-label="Faire défiler la vidéo du papier"
+            />
+          </div>
+
+          {isCameraActive && <p className="cameraStatus">{cameraStatus}</p>}
+          {!isMetadataLoaded && <p className="cameraStatus">Chargement de la vidéo...</p>}
+        </div>
+      )}
     </section>
   );
 }

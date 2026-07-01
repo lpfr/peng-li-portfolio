@@ -6,12 +6,12 @@ export default function OpeningStory() {
         <p>
           Après le chômage,
           <br />
-          j’étais une feuille froissée.
+          je me suis senti comme une feuille froissée.
         </p>
         <p>
-          Pas effacé.
+          Mis de côté.
           <br />
-          Seulement plié.
+          Mais pas effacé.
         </p>
         <p>Alors j’ai recommencé.</p>
         <p>

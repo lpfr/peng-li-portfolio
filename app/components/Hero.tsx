@@ -18,6 +18,7 @@ const VIDEO_SEEK_EPSILON = 0.006;
 const FIRST_DECODED_FRAME_TIME = 0.04;
 const MOBILE_FRAME_COUNT = 76;
 const VIDEO_DURATION_FALLBACK = 5.07;
+const MIN_AUTO_CALIBRATION_RANGE = 0.22;
 
 type CameraStatus = "Caméra éteinte" | "Recherche de la main" | "Main détectée";
 
@@ -42,6 +43,8 @@ export default function Hero() {
   const smoothedOpennessRef = useRef(0);
   const fistRawRef = useRef(DEFAULT_FIST_RAW);
   const openRawRef = useRef(DEFAULT_OPEN_RAW);
+  const observedMinRawRef = useRef(Number.POSITIVE_INFINITY);
+  const observedMaxRawRef = useRef(Number.NEGATIVE_INFINITY);
 
   const [isMetadataLoaded, setIsMetadataLoaded] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -150,7 +153,8 @@ export default function Hero() {
     const tick = () => {
       const target = targetProgressRef.current;
       const current = currentProgressRef.current;
-      const next = current + (target - current) * 0.16;
+      const progressEase = mobileFrameModeRef.current ? 0.24 : 0.16;
+      const next = current + (target - current) * progressEase;
       const snapped = Math.abs(target - next) < 0.004 ? target : next;
 
       currentProgressRef.current = snapped;
@@ -278,15 +282,28 @@ export default function Hero() {
     const raw = calculatePalmOpenness(landmarks);
     rawOpennessRef.current = raw;
 
+    if (mobileFrameModeRef.current) {
+      observedMinRawRef.current = Math.min(observedMinRawRef.current, raw);
+      observedMaxRawRef.current = Math.max(observedMaxRawRef.current, raw);
+    }
+
     const prev = smoothedOpennessRef.current;
-    const smoothed = prev + (raw - prev) * smoothingStrengthRef.current;
+    const closingStrength = mobileFrameModeRef.current ? 0.38 : smoothingStrengthRef.current;
+    const openingStrength = mobileFrameModeRef.current ? 0.28 : smoothingStrengthRef.current;
+    const smoothed = prev + (raw - prev) * (raw < prev ? closingStrength : openingStrength);
     smoothedOpennessRef.current = smoothed;
 
-    const mappedProgress = mapPalmOpennessToProgress(
-      smoothed,
-      fistRawRef.current,
-      openRawRef.current
-    );
+    const observedRange = observedMaxRawRef.current - observedMinRawRef.current;
+    const fistRaw =
+      mobileFrameModeRef.current && observedRange >= MIN_AUTO_CALIBRATION_RANGE
+        ? observedMinRawRef.current
+        : fistRawRef.current;
+    const openRaw =
+      mobileFrameModeRef.current && observedRange >= MIN_AUTO_CALIBRATION_RANGE
+        ? observedMaxRawRef.current
+        : openRawRef.current;
+
+    const mappedProgress = mapPalmOpennessToProgress(smoothed, fistRaw, openRaw);
 
     setCameraStatus("Main détectée");
     setRawOpenness(raw);
@@ -320,6 +337,8 @@ export default function Hero() {
       await createHandLandmarker();
 
       smoothedOpennessRef.current = 0;
+      observedMinRawRef.current = Number.POSITIVE_INFINITY;
+      observedMaxRawRef.current = Number.NEGATIVE_INFINITY;
       targetProgressRef.current = 0;
       currentProgressRef.current = 0;
       lastWrittenProgressRef.current = -1;
@@ -412,7 +431,10 @@ export default function Hero() {
         </small>
       </div>
 
-      <div className="heroControls" aria-label="Contrôles d’interaction vidéo">
+      <div
+        className={`heroControls${isCameraActive ? " isCameraActive" : ""}`}
+        aria-label="Contrôles d’interaction vidéo"
+      >
         {isCameraActive ? (
           <button className="handButton" type="button" onClick={handleDisableCamera}>
             Arrêter le mode main

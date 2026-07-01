@@ -1110,26 +1110,47 @@ main {
     position: fixed;
     left: 16px;
     right: 16px;
-    bottom: 16px;
+    bottom: 8px;
     z-index: 30;
     width: auto;
-    gap: 8px;
-    padding: 10px;
-    border: 1px solid rgba(249, 248, 243, 0.2);
-    border-radius: 22px;
-    background: rgba(5, 8, 13, 0.38);
-    backdrop-filter: blur(18px);
+    gap: 6px;
+    padding: 7px;
+    border: 0;
+    border-radius: 18px;
+    background: transparent;
+    backdrop-filter: none;
   }
 
   .handButton {
-    min-height: 52px;
+    min-height: 44px;
     font-size: 0.82rem;
   }
 
   .gestureGuide {
     max-width: none;
-    padding-inline: 6px;
+    padding-inline: 5px;
     font-size: 0.72rem;
+    text-shadow: 0 1px 8px rgba(0, 0, 0, 0.8);
+  }
+
+  .heroControls:not(.isCameraActive) .gestureGuide span {
+    display: none;
+  }
+
+  .heroControls:not(.isCameraActive) .gestureGuide span:last-child {
+    display: flex;
+  }
+
+  .heroControls.isCameraActive .gestureGuide,
+  .heroControls.isCameraActive .calibrationControls,
+  .heroControls.isCameraActive .smoothingControl,
+  .heroControls.isCameraActive .debugReadout {
+    display: none;
+  }
+
+  .heroControls.isCameraActive .cameraStatus {
+    padding-inline: 5px;
+    text-shadow: 0 1px 8px rgba(0, 0, 0, 0.8);
   }
 
   .footerIntro {

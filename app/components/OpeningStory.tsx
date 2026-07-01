@@ -12,33 +12,20 @@ export default function OpeningStory() {
           <p>
             Mis de côté.
             <br />
-            Mais pas effacé.
+            Pas effacé.
           </p>
-          <p>Alors j’ai recommencé.</p>
           <p>
-            Une image.
+            Alors j’ai recommencé :
             <br />
-            Un geste.
-            <br />
-            Un site.
-            <br />
-            Un retour.
+            une image, un geste, un site.
           </p>
         </div>
 
-        <div className="openingCapability">
-          <p className="practicePosition">
-            Je crée des expériences visuelles et interactives avec l’IA, le web et le mouvement.
-          </p>
-          <div className="openingMediums">
-            <p>Cette ouverture interactive combine :</p>
-            <ul aria-label="Médiums de l’ouverture interactive">
-              <li>Image IA</li>
-              <li>Animation web</li>
-              <li>Détection de la main</li>
-              <li>Narration personnelle</li>
-            </ul>
-          </div>
+        <div className="openingCapability" aria-label="Médiums de l’ouverture interactive">
+          <span>Image IA</span>
+          <span>Geste</span>
+          <span>Web</span>
+          <span>Narration</span>
         </div>
       </div>
     </section>

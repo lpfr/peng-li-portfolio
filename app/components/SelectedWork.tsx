@@ -3,9 +3,8 @@ const works = [
     title: "Voyages Intérieurs",
     type: "Expérience de réflexion personnelle / Test interactif",
     year: "2026",
-    role: "Concept, direction visuelle, interface, prompts IA",
-    tools: "Image IA · Interface web · Prompt design · Prototypage",
-    skills: "Narration personnelle · Expérience utilisateur · Direction visuelle",
+    role: "Concept · Direction visuelle · Interface",
+    mediums: "Image IA · Web · Narration",
     href: "https://inner-journey-tests.vercel.app/",
     image: "/assets/work/voyages-interieurs-home.png",
     description:
@@ -15,9 +14,8 @@ const works = [
     title: "Portrait en mouvement",
     type: "Geste / Vidéo IA / Prototype web",
     year: "2026",
-    role: "Interaction, direction visuelle, prototype",
-    tools: "MediaPipe · React · Vidéo IA · Animation web",
-    skills: "Interaction gestuelle · Narration visuelle · Prototypage",
+    role: "Interaction · Direction visuelle · Prototype",
+    mediums: "Vidéo IA · Geste · Animation web",
     href: "#top",
     image: "/assets/hero/paper-ball.png",
     description:
@@ -27,9 +25,8 @@ const works = [
     title: "Workflow Systems",
     type: "Processus IA / Prototypage / Automatisation créative",
     year: "2026",
-    role: "Prompt design, image, vidéo, interface",
-    tools: "n8n · IA générative · Automatisation · Prototypage",
-    skills: "Conception de workflow · Pensée système · Expérimentation",
+    role: "Workflow créatif · Interface · Système",
+    mediums: "IA · Web · Automatisation",
     href: "#process",
     image: "/assets/work/workflow-n8n-video-agent.png",
     description:
@@ -43,9 +40,9 @@ export default function SelectedWork() {
       <div className="sectionHeader">
         <p className="sectionKicker">[03] Projets après</p>
         <div>
-          <h2 id="work-title">Ce ne sont pas beaucoup de projets. Ce sont des traces.</h2>
+          <h2 id="work-title">Peu de projets. Mais des traces.</h2>
           <p className="darkLead">
-            Des choses construites après le doute.
+            Après le doute.
             <br />
             Après le silence.
             <br />
@@ -78,12 +75,8 @@ export default function SelectedWork() {
                   <dd>{work.role}</dd>
                 </div>
                 <div>
-                  <dt>Techniques</dt>
-                  <dd>{work.tools}</dd>
-                </div>
-                <div>
-                  <dt>Lecture</dt>
-                  <dd>{work.skills}</dd>
+                  <dt>Médiums</dt>
+                  <dd>{work.mediums}</dd>
                 </div>
               </dl>
             </div>

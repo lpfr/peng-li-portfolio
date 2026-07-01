@@ -411,11 +411,9 @@ export default function Hero() {
           <span>Comme une feuille froissée.</span>
         </h1>
         <p className="heroIntroInstruction">
-          Ouvre ta main devant la caméra
+          Ouvre ta main.
           <br />
-          pour déplier le papier
-          <br />
-          et découvrir la personne à l’intérieur.
+          Déplie le papier.
         </p>
         <div className="heroIntroActions">
           <button
@@ -435,11 +433,7 @@ export default function Hero() {
             Voir sans caméra
           </button>
         </div>
-        <p className="heroPrivacy">
-          La caméra sert uniquement à détecter ta main.
-          <br />
-          Aucune image n’est enregistrée.
-        </p>
+        <p className="heroPrivacy">Caméra utilisée uniquement pour détecter la main.</p>
       </div>
 
       {hasEnteredExperience && isCameraActive && !revealComplete && (
@@ -448,9 +442,9 @@ export default function Hero() {
 
       {hasEnteredExperience && revealComplete && (
         <p className="heroRevealMessage">
-          Je n’étais pas un déchet.
+          Pas un déchet.
           <br />
-          J’étais seulement froissé.
+          Seulement froissé.
         </p>
       )}
 

@@ -65,7 +65,7 @@ export default function SelectedWork() {
             target={work.href.startsWith("http") ? "_blank" : undefined}
             rel={work.href.startsWith("http") ? "noreferrer" : undefined}
           >
-            <span className="workNumber">{String(index + 1).padStart(2, "0")}</span>
+            <span className="workNumber">[{String(index + 1).padStart(2, "0")}]</span>
             <div className="workIdentity">
               <strong>{work.title}</strong>
               <p>{work.type}</p>
@@ -74,15 +74,15 @@ export default function SelectedWork() {
               <p className="workConcept">{work.description}</p>
               <dl>
                 <div>
-                  <dt>Ce que j’ai fait</dt>
+                  <dt>Rôle</dt>
                   <dd>{work.role}</dd>
                 </div>
                 <div>
-                  <dt>Outils / Techniques</dt>
+                  <dt>Techniques</dt>
                   <dd>{work.tools}</dd>
                 </div>
                 <div>
-                  <dt>Compétences montrées</dt>
+                  <dt>Lecture</dt>
                   <dd>{work.skills}</dd>
                 </div>
               </dl>

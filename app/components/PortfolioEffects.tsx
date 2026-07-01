@@ -36,9 +36,9 @@ export default function PortfolioEffects() {
             yPercent: 0,
             opacity: 1,
             scaleY: 1,
-            duration: 1.1,
-            ease: "expo.out",
-            delay: index * 0.08,
+            duration: 1.3,
+            ease: "power3.out",
+            delay: index * 0.1,
             scrollTrigger: {
               trigger: ".identitySection",
               start: "top 62%",
@@ -56,13 +56,13 @@ export default function PortfolioEffects() {
 
         gsap.fromTo(
           children.length ? children : section,
-          { y: 60, opacity: 0 },
+          { y: 36, opacity: 0 },
           {
             y: 0,
             opacity: 1,
-            duration: 0.9,
-            ease: "power3.out",
-            stagger: 0.08,
+            duration: 1.1,
+            ease: "power2.out",
+            stagger: 0.1,
             scrollTrigger: {
               trigger: section,
               start: "top 74%",
@@ -75,7 +75,7 @@ export default function PortfolioEffects() {
       gsap.to(".floatingPaperGuide", {
         y: -10,
         rotate: 7,
-        duration: 2.8,
+        duration: 3.8,
         repeat: -1,
         yoyo: true,
         ease: "sine.inOut"
@@ -87,23 +87,23 @@ export default function PortfolioEffects() {
             trigger: document.body,
             start: "top top",
             end: "bottom bottom",
-            scrub: 1.1
+            scrub: 1.6
           }
         })
         .fromTo(
           ".floatingPaperGuide",
           { x: 0, y: 0, rotate: -18, scale: 0.82, opacity: 0 },
-          { x: "-14vw", y: "26vh", rotate: 42, scale: 1, opacity: 0.52, ease: "none" },
+          { x: "-14vw", y: "26vh", rotate: 34, scale: 1, opacity: 0.4, ease: "none" },
           0
         )
         .to(
           ".floatingPaperGuide",
-          { x: "-58vw", y: "118vh", rotate: -26, scale: 0.72, opacity: 0.42, ease: "none" },
+          { x: "-58vw", y: "118vh", rotate: -20, scale: 0.72, opacity: 0.32, ease: "none" },
           0.28
         )
         .to(
           ".floatingPaperGuide",
-          { x: "-20vw", y: "232vh", rotate: 64, scale: 0.46, opacity: 0.28, ease: "none" },
+          { x: "-20vw", y: "232vh", rotate: 48, scale: 0.46, opacity: 0.22, ease: "none" },
           0.62
         )
         .to(
@@ -114,20 +114,18 @@ export default function PortfolioEffects() {
 
       gsap.utils.toArray<HTMLElement>(".glimpseBlock").forEach((block, index) => {
         gsap.to(block, {
-          y: index % 2 === 0 ? -42 : 34,
+          y: index % 2 === 0 ? -24 : 18,
           ease: "none",
           scrollTrigger: {
             trigger: ".visualGlimpse",
             start: "top bottom",
             end: "bottom top",
-            scrub: 1
+            scrub: 1.4
           }
         });
       });
 
-      const magneticTargets = gsap.utils.toArray<HTMLElement>(
-        ".handButton, .calibrateButton, .siteFooter a"
-      );
+      const magneticTargets = gsap.utils.toArray<HTMLElement>(".siteFooter a");
 
       magneticTargets.forEach((target) => {
         const onMove = (event: MouseEvent) => {
@@ -155,9 +153,9 @@ export default function PortfolioEffects() {
       x: preview.x + 26,
       y: preview.y + 26,
       opacity: preview.active ? 1 : 0,
-      scale: preview.active ? 1 : 0.92,
-      duration: 0.28,
-      ease: "power3.out"
+      scale: preview.active ? 1 : 0.98,
+      duration: 0.45,
+      ease: "power2.out"
     });
   }, [preview]);
 

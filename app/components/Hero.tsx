@@ -366,7 +366,10 @@ export default function Hero() {
         </div>
       </nav>
 
-      <div className="heroVideoStage" aria-hidden="true">
+      <div
+        className={`heroVideoStage${revealComplete ? " isRevealed" : ""}`}
+        aria-hidden="true"
+      >
         <img
           ref={mobileFrameRef}
           className="heroMobileFrame"
@@ -399,7 +402,14 @@ export default function Hero() {
       <video ref={cameraVideoRef} className="cameraFeed" muted playsInline aria-hidden="true" />
 
       <div className={`heroIntroOverlay${hasEnteredExperience ? " isHidden" : ""}`}>
-        <h1>Je me suis senti jeté comme une feuille froissée.</h1>
+        <div className="heroIntroMeta">
+          <span>Peng Li</span>
+          <span>Ouverture / le papier</span>
+        </div>
+        <h1>
+          <span>Jeté.</span>
+          <span>Comme une feuille froissée.</span>
+        </h1>
         <p className="heroIntroInstruction">
           Ouvre ta main devant la caméra
           <br />

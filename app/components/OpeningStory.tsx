@@ -30,10 +30,15 @@ export default function OpeningStory() {
           <p className="practicePosition">
             Je crée des expériences visuelles et interactives avec l’IA, le web et le mouvement.
           </p>
-          <p>
-            <span>Cette ouverture interactive combine :</span>
-            image IA, animation web, détection de la main et narration personnelle.
-          </p>
+          <div className="openingMediums">
+            <p>Cette ouverture interactive combine :</p>
+            <ul aria-label="Médiums de l’ouverture interactive">
+              <li>Image IA</li>
+              <li>Animation web</li>
+              <li>Détection de la main</li>
+              <li>Narration personnelle</li>
+            </ul>
+          </div>
         </div>
       </div>
     </section>

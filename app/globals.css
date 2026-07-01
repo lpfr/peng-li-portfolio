@@ -1517,11 +1517,80 @@ main {
     margin-top: 72px;
   }
 
+  .openingStoryBody,
+  .openingStoryText,
+  .openingCapability,
+  .studioStatement,
+  .studioFlow,
+  .studioMeta,
+  .sectionHeader,
+  .sectionHeader > div,
+  .workIdentity,
+  .workDetails,
+  .workAction {
+    min-width: 0;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .openingStoryText p:nth-child(even) {
+    max-width: 100%;
+    margin-left: 0;
+  }
+
+  .selectedWork {
+    padding-right: 20px;
+    padding-left: 20px;
+  }
+
+  .sectionHeader {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 18px;
+    margin-bottom: 52px;
+    text-align: left;
+  }
+
+  .sectionHeader .sectionKicker {
+    margin: 0;
+  }
+
+  .sectionHeader h2 {
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    font-size: clamp(1.85rem, 9vw, 2.8rem);
+    line-height: 1.08;
+    overflow-wrap: break-word;
+    word-break: normal;
+  }
+
+  .sectionHeader .darkLead {
+    width: 100%;
+    max-width: 100%;
+    margin: 22px 0 0;
+    font-size: 0.98rem;
+    line-height: 1.6;
+    text-align: left;
+    overflow-wrap: break-word;
+    word-break: normal;
+  }
+
   .workRow {
     grid-template-columns: 28px 1fr;
     gap: 12px;
     min-height: auto;
     padding: 28px 0;
+    overflow-wrap: break-word;
+    word-break: normal;
+  }
+
+  .workRow:hover {
+    transform: none;
+  }
+
+  .workRow:hover strong {
+    transform: none;
   }
 
   .workRow strong {

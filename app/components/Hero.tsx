@@ -489,7 +489,7 @@ export default function Hero() {
 
       <a
         className={`heroScrollCue${isScrollCueVisible ? "" : " isHidden"}${hasEnteredExperience ? " withControls" : ""}`}
-        href="#work"
+        href="#opening"
         aria-label="Voir les projets"
       >
         <span className="heroScrollLabel">Voir les projets</span>

@@ -411,18 +411,18 @@ export default function Hero() {
       <video ref={cameraVideoRef} className="cameraFeed" muted playsInline aria-hidden="true" />
 
       <div className={`heroIntroOverlay${hasEnteredExperience ? " isHidden" : ""}`}>
-        <div className="heroIntroMeta">
-          <span>Peng Li</span>
-          <span>Ouverture / le papier</span>
-        </div>
-        <h1>
-          <span>Sous les plis,</span>
-          <span>il y a encore quelqu’un.</span>
-        </h1>
+        <h1>Portfolio personnel</h1>
+        <p className="heroOwner">Peng Li</p>
+        <p className="heroDisciplines">IA · Image · Interaction · Web</p>
+        <p className="heroMetaphor">
+          Un papier froissé,
+          <br />
+          comme abandonné.
+        </p>
         <p className="heroIntroInstruction">
           Ouvre ta main.
           <br />
-          Déplie le papier.
+          Déplie-le.
         </p>
         <div className="heroIntroActions">
           <button
@@ -453,7 +453,7 @@ export default function Hero() {
         <p className="heroRevealMessage">
           Pas un déchet.
           <br />
-          Seulement froissé.
+          Encore quelqu’un.
         </p>
       )}
 
@@ -489,10 +489,11 @@ export default function Hero() {
 
       <a
         className={`heroScrollCue${isScrollCueVisible ? "" : " isHidden"}${hasEnteredExperience ? " withControls" : ""}`}
-        href="#opening"
-        aria-label="Découvrir la suite"
+        href="#work"
+        aria-label="Voir les projets"
       >
-        <span aria-hidden="true" />
+        <span className="heroScrollLabel">Voir les projets</span>
+        <span className="heroScrollArrow" aria-hidden="true" />
       </a>
     </section>
   );

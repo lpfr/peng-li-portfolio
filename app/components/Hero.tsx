@@ -492,7 +492,7 @@ export default function Hero() {
         href="#opening"
         aria-label="Découvrir la suite"
       >
-        <span aria-hidden="true">V</span>
+        <span aria-hidden="true" />
       </a>
     </section>
   );

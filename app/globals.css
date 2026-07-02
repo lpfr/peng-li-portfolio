@@ -317,20 +317,22 @@ main {
 
 .heroScrollCue span {
   display: block;
-  margin: 0;
-  font-size: 1.25rem;
-  font-weight: 900;
-  line-height: 1;
+  width: 13px;
+  height: 13px;
+  margin-top: -5px;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: rotate(45deg);
   animation: scrollCueBreath 2.8s ease-in-out infinite;
 }
 
 @keyframes scrollCueBreath {
   0%,
   100% {
-    transform: translateY(0);
+    translate: 0 0;
   }
   50% {
-    transform: translateY(4px);
+    translate: 0 4px;
   }
 }
 

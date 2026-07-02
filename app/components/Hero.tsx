@@ -488,12 +488,11 @@ export default function Hero() {
       )}
 
       <a
-        className={`heroScrollCue${isScrollCueVisible ? "" : " isHidden"}`}
+        className={`heroScrollCue${isScrollCueVisible ? "" : " isHidden"}${hasEnteredExperience ? " withControls" : ""}`}
         href="#opening"
         aria-label="Découvrir la suite"
       >
-        <span>Découvrir la suite</span>
-        <span aria-hidden="true">↓</span>
+        <span aria-hidden="true">⌄</span>
       </a>
     </section>
   );

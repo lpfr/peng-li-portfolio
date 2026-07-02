@@ -253,9 +253,9 @@ main {
 
 .heroPrivacy {
   margin: 20px 0 0;
-  color: rgba(245, 241, 232, 0.48);
-  font-size: 0.65rem;
-  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.76);
+  font-size: 13px;
+  line-height: 1.55;
 }
 
 .heroGesturePrompt,
@@ -285,17 +285,24 @@ main {
 
 .heroScrollCue {
   position: absolute;
-  right: clamp(22px, 4vw, 56px);
-  bottom: calc(18px + env(safe-area-inset-bottom, 0px));
+  left: 50%;
+  bottom: calc(24px + env(safe-area-inset-bottom, 0px));
   z-index: 9;
-  display: inline-flex;
-  align-items: center;
-  gap: 9px;
-  color: rgba(245, 241, 232, 0.62);
-  font-size: 0.68rem;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid rgba(255, 255, 255, 0.46);
+  border-radius: 50%;
+  background: rgba(23, 20, 17, 0.16);
+  color: rgba(255, 255, 255, 0.84);
   text-decoration: none;
-  text-transform: uppercase;
-  transition: opacity 500ms ease;
+  backdrop-filter: blur(8px);
+  transform: translateX(-50%);
+  transition:
+    opacity 500ms ease,
+    border-color 260ms ease,
+    background 260ms ease;
 }
 
 .heroScrollCue.isHidden {
@@ -303,8 +310,15 @@ main {
   pointer-events: none;
 }
 
-.heroScrollCue span:last-child {
-  font-size: 0.9rem;
+.heroScrollCue:hover {
+  border-color: rgba(255, 255, 255, 0.72);
+  background: rgba(23, 20, 17, 0.28);
+}
+
+.heroScrollCue span {
+  margin-top: -5px;
+  font-size: 1.45rem;
+  line-height: 1;
   animation: scrollCueBreath 2.8s ease-in-out infinite;
 }
 
@@ -1345,10 +1359,11 @@ main {
 
 @media (max-width: 640px) {
   .heroScrollCue {
-    right: 50%;
-    bottom: calc(86px + env(safe-area-inset-bottom, 0px));
-    transform: translateX(50%);
-    white-space: nowrap;
+    bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .heroScrollCue.withControls {
+    bottom: calc(92px + env(safe-area-inset-bottom, 0px));
   }
 
   .heroIntroOverlay {
@@ -1394,7 +1409,8 @@ main {
 
   .heroPrivacy {
     margin-top: 12px;
-    font-size: 0.64rem;
+    font-size: 14px;
+    line-height: 1.5;
   }
 
   .heroGesturePrompt {

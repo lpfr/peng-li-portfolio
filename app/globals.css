@@ -316,8 +316,10 @@ main {
 }
 
 .heroScrollCue span {
-  margin-top: -5px;
-  font-size: 1.45rem;
+  display: block;
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 900;
   line-height: 1;
   animation: scrollCueBreath 2.8s ease-in-out infinite;
 }
